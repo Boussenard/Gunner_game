@@ -23,6 +23,11 @@ class Game:
         # game groups
         self.bullet_group = pygame.sprite.Group()
 
+        # gun recoil
+        self.shot = False
+        self.start_time = 0
+        self.current_time = 0
+
     def run(self):
         while 1 == 1:
             for event in pygame.event.get():
@@ -30,16 +35,26 @@ class Game:
                     pygame.quit()
                     sys.exit()
                 # shooting
-                elif event.type == pygame.MOUSEBUTTONDOWN:
+                elif event.type == pygame.MOUSEBUTTONDOWN and self.shot is False:
+                    # adding bullet object into the group
                     x, y, angle, vector = self.gun.bullet_data()
                     self.bullet_group.add(Bullet(x, y, angle, vector))
+                    # time of shot, start of recoil
+                    self.start_time = pygame.time.get_ticks()
+                    self.shot = True
 
             self.screen.fill((29, 29, 29))
+
+            # waiting time to end recoil
+            self.current_time = pygame.time.get_ticks()
+            if self.current_time - self.start_time > 200:
+                self.shot = False
+
             # updating objects
-            self.player.update(self.gun.player_look_angle())
+            self.player.update(self.gun.player_look_angle()[0], self.gun.player_look_angle()[1])
             # updating data for gun
             player_x, player_y, flip = self.player.gun_cords()
-            self.gun.update(player_x, player_y, flip)
+            self.gun.update(player_x, player_y, flip, self.shot)
             self.cursor.update()
 
             # updating groups

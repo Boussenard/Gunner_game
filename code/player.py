@@ -60,15 +60,15 @@ class Player(pygame.sprite.Sprite):
             self.image = pygame.transform.flip(self.image, True, False)
             self.flipped = False
 
-    def look(self, angle):
+    def look(self, angle, recoil):
 
         # looks down
-        if 340 >= angle >= 200:
+        if 340 >= angle - recoil >= 200:
             self.image = pygame.image.load('data/Player_down.png').convert_alpha()
             self.flipped = False
 
         # looks up
-        elif 20 <= angle <= 160:
+        elif 20 <= angle - recoil <= 160:
             self.image = pygame.image.load('data/Player_up.png').convert_alpha()
             self.flipped = False
 
@@ -81,8 +81,8 @@ class Player(pygame.sprite.Sprite):
         # giving data to gun.py
         return self.rect.centerx, self.rect.centery, self.flipped
 
-    def update(self, angle):
+    def update(self, angle, recoil):
         self.input()
         self.move()
-        self.look(angle)
+        self.look(angle, recoil)
         self.flip()
