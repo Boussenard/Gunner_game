@@ -5,6 +5,7 @@ from player import Player
 from gun import Gun
 from cursor import Cursor
 from bullet import Bullet
+from interface import Interface
 
 
 class Game:
@@ -19,6 +20,7 @@ class Game:
         self.player = Player()
         self.gun = Gun()
         self.cursor = Cursor()
+        self.interface = Interface()
 
         # game groups
         self.bullet_group = pygame.sprite.Group()
@@ -65,6 +67,7 @@ class Game:
             self.screen.blit(self.gun.image, self.gun.rect)
             self.screen.blit(self.cursor.image, self.cursor.rect)
             self.bullet_group.draw(self.screen)
+            self.interface.interface_draw(self.screen)
 
             pygame.display.update()
             self.clock.tick(FPS)

@@ -7,7 +7,7 @@ class Gun(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.player = Player()
-        self.image = pygame.image.load('/home/boussenard/PycharmProjects/Gunner/data/Gun.png').convert_alpha()
+        self.image = pygame.image.load('data/Gun.png').convert_alpha()
         self.original_image = self.image
         self.rect = self.image.get_rect(center=(self.player.rect.centerx+30, self.player.rect.centery))
 

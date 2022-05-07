@@ -5,7 +5,7 @@ from settings import *
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, x, y, angle, vector):
         super().__init__()
-        self.image = pygame.image.load('/home/boussenard/PycharmProjects/Gunner/data/Bullet.png').convert_alpha()
+        self.image = pygame.image.load('data/Bullet.png').convert_alpha()
         self.rect = self.image.get_rect(midleft=(x, y))
         self.image = pygame.transform.rotate(self.image, angle)
         self.speed = 30
