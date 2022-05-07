@@ -5,7 +5,7 @@ from settings import *
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = pygame.image.load('data/Player.png').convert_alpha()
+        self.image = pygame.image.load('/home/boussenard/PycharmProjects/Gunner/data/Player.png').convert_alpha()
         self.rect = self.image.get_rect(center=(WIDTH/2, HEIGHT/2))
 
         self.direction = pygame.math.Vector2()
@@ -64,17 +64,18 @@ class Player(pygame.sprite.Sprite):
 
         # looks down
         if 340 >= angle - recoil >= 200:
-            self.image = pygame.image.load('data/Player_down.png').convert_alpha()
+            self.image = pygame.image.load(
+                '/home/boussenard/PycharmProjects/Gunner/data/Player_down.png').convert_alpha()
             self.flipped = False
 
         # looks up
         elif 20 <= angle - recoil <= 160:
-            self.image = pygame.image.load('data/Player_up.png').convert_alpha()
+            self.image = pygame.image.load('/home/boussenard/PycharmProjects/Gunner/data/Player_up.png').convert_alpha()
             self.flipped = False
 
         # looks ahead
         else:
-            self.image = pygame.image.load('data/Player.png').convert_alpha()
+            self.image = pygame.image.load('/home/boussenard/PycharmProjects/Gunner/data/Player.png').convert_alpha()
             self.flipped = False
 
     def gun_cords(self):
