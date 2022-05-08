@@ -27,12 +27,18 @@ class Gun(pygame.sprite.Sprite):
                 self.recoil = -20
         else:
             self.recoil = 0
+
         # calculating angle between player and cursor
         mouse_x, mouse_y = pygame.mouse.get_pos()
         rel_x, rel_y = mouse_x - player_x, mouse_y - player_y
         self.angle = (180 / math.pi) * -math.atan2(rel_y, rel_x) + self.recoil
+        if shot is 'no ammo':
+            self.recoil = 20
+            if flip:
+                self.recoil = -20
         if self.angle < 0:
             self.angle += 360
+
         # calculating location of gun on circle
         self.offset_vector = self.offset_vector_copy.rotate(-self.angle)
         # rotating gun
