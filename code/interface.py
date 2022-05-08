@@ -22,11 +22,12 @@ class Interface:
             screen.blit(self.bullet, self.bullet_rect)
 
     def update(self, shot):
-        if shot and self.can:
+        if shot is True:
             self.gun = pygame.transform.rotate(self.gun_copy, 20)
             self.gun_rect = self.gun.get_rect(center=(WIDTH-100, HEIGHT-135))
-            self.can = False
-        elif shot is False and self.can is False:
+        elif shot == 'no ammo':
+            self.gun = pygame.transform.rotate(self.gun_copy, -30)
+            self.gun_rect = self.gun.get_rect(center=(WIDTH - 100, HEIGHT - 135))
+        elif shot is False:
             self.gun = self.gun_copy
             self.gun_rect = self.gun.get_rect(center=(WIDTH - 100, HEIGHT - 135))
-            self.can = True

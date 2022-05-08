@@ -52,8 +52,18 @@ class Game:
 
             # waiting time to end recoil ------------------------------------------------------ #
             self.current_time = pygame.time.get_ticks()
-            if self.current_time - self.start_time > 200:
+            if self.current_time - self.start_time > 200 and self.shot != 'no ammo':
                 self.shot = False
+
+            # shooting is unable -------------------------------------------------------------- #
+            if self.ammo == 0 and self.shot != 'no ammo':
+                self.shot = 'no ammo'
+                self.start_time = pygame.time.get_ticks()
+
+            # shooting is available ----------------------------------------------------------- #
+            if self.current_time - self.start_time > 400 and self.shot == 'no ammo':
+                self.shot = False
+                self.ammo = 5
 
             # updating objects ---------------------------------------------------------------- #
             self.player.update(self.gun.player_look_angle()[0], self.gun.player_look_angle()[1])
@@ -72,10 +82,6 @@ class Game:
             self.screen.blit(self.cursor.image, self.cursor.rect)
             self.bullet_group.draw(self.screen)
             self.interface.interface_draw(self.screen, self.ammo)
-
-            # shooting is unable -------------------------------------------------------------- #
-            if self.ammo == 0:
-                self.shot = 'no ammo'
 
             pygame.display.update()
             self.clock.tick(FPS)

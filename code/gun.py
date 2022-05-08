@@ -18,6 +18,7 @@ class Gun(pygame.sprite.Sprite):
         self.flipped = False
         self.angle = 0
         self.recoil = 0
+        self.ammo = 1
 
     def rotate(self, player_x, player_y, shot, flip):
         # calculating recoil
@@ -32,7 +33,7 @@ class Gun(pygame.sprite.Sprite):
         mouse_x, mouse_y = pygame.mouse.get_pos()
         rel_x, rel_y = mouse_x - player_x, mouse_y - player_y
         self.angle = (180 / math.pi) * -math.atan2(rel_y, rel_x) + self.recoil
-        if shot is 'no ammo':
+        if shot == 'no ammo':
             self.recoil = 20
             if flip:
                 self.recoil = -20
@@ -47,6 +48,8 @@ class Gun(pygame.sprite.Sprite):
         # moving gun on circle
         self.rect.center += self.offset_vector
 
+        self.ammo = 1
+
     def flip(self, flip):
         if flip and self.flipped is False:
             # flipping gun after player
@@ -58,6 +61,18 @@ class Gun(pygame.sprite.Sprite):
             self.original_image = pygame.transform.flip(self.original_image, False, True)
             self.flipped = False
 
+    def reload(self, flip, player_x, player_y):
+        if flip:
+            self.angle = 240
+        else:
+            self.angle = 300
+        self.offset_vector = self.offset_vector_copy.rotate(-self.angle)
+        # rotating gun
+        self.image = pygame.transform.rotate(self.original_image, self.angle)
+        self.rect = self.image.get_rect(center=(player_x, player_y))
+        self.rect.center += self.offset_vector
+        self.ammo = 0
+
     def player_look_angle(self):
         # giving angle and recoil values to player.py for look calculating
         return self.angle, self.recoil
@@ -67,6 +82,9 @@ class Gun(pygame.sprite.Sprite):
         return self.rect.centerx, self.rect.centery, self.angle, self.offset_vector
 
     def update(self, player_x, player_y, flip, shot):
-        self.rotate(player_x, player_y, shot, flip)
+        if shot == 'no ammo':
+            self.reload(flip, player_x, player_y)
+        else:
+            self.rotate(player_x, player_y, shot, flip)
         self.flip(flip)
 
