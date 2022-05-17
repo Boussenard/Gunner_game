@@ -25,53 +25,30 @@ class Game:
         # game groups
         self.bullet_group = pygame.sprite.Group()
 
-        # gun recoil
-        self.shot = False
-        self.start_time = 0
-        self.current_time = 0
-        self.ammo = 5
-
     def run(self):
         while 1 == 1:
             for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN and self.gun.shot is False:
+                    # adding bullet object into the group
+                    self.bullet_group.add(Bullet(self.gun.rect.centerx, self.gun.rect.centery, self.gun.angle, self.gun.offset_vector))
+                    # time of shot, start of recoil
+                    self.gun.start_time = pygame.time.get_ticks()
+                    self.gun.shot = True
+                    # decrementing ammo value
+                    self.gun.ammo -= 1
+
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                # shooting
-                elif event.type == pygame.MOUSEBUTTONDOWN and self.shot is False:
-                    # adding bullet object into the group
-                    x, y, angle, vector = self.gun.bullet_data()
-                    self.bullet_group.add(Bullet(x, y, angle, vector))
-                    # time of shot, start of recoil
-                    self.start_time = pygame.time.get_ticks()
-                    self.shot = True
-                    # decrementing ammo value
-                    self.ammo -= 1
 
             self.screen.fill((29, 29, 29))
 
-            # waiting time to end recoil ------------------------------------------------------ #
-            self.current_time = pygame.time.get_ticks()
-            if self.current_time - self.start_time > 200 and self.shot != 'no ammo':
-                self.shot = False
-
-            # shooting is unable -------------------------------------------------------------- #
-            if self.ammo == 0 and self.shot != 'no ammo':
-                self.shot = 'no ammo'
-                self.start_time = pygame.time.get_ticks()
-
-            # shooting is available ----------------------------------------------------------- #
-            if self.current_time - self.start_time > 400 and self.shot == 'no ammo':
-                self.shot = False
-                self.ammo = 5
-
             # updating objects ---------------------------------------------------------------- #
-            self.player.update(self.gun.player_look_angle()[0], self.gun.player_look_angle()[1])
+            self.player.update(self.gun.angle - self.gun.recoil)
             # updating data for gun
-            player_x, player_y, flip = self.player.gun_cords()
-            self.gun.update(player_x, player_y, flip, self.shot)
+            self.gun.update(self.player.rect.centerx, self.player.rect.centery, self.player.flipped)
             self.cursor.update()
-            self.interface.update(self.shot)
+            self.interface.update(self.gun.shot)
 
             # updating groups ----------------------------------------------------------------- #
             self.bullet_group.update()
@@ -81,7 +58,7 @@ class Game:
             self.screen.blit(self.gun.image, self.gun.rect)
             self.screen.blit(self.cursor.image, self.cursor.rect)
             self.bullet_group.draw(self.screen)
-            self.interface.interface_draw(self.screen, self.ammo)
+            self.interface.interface_draw(self.screen, self.gun.ammo)
 
             pygame.display.update()
             self.clock.tick(FPS)

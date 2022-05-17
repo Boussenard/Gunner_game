@@ -9,20 +9,26 @@ class Gun(pygame.sprite.Sprite):
         self.player = Player()
         self.image = pygame.image.load('data/Gun.png').convert_alpha()
         self.original_image = self.image
-        self.rect = self.image.get_rect(center=(self.player.rect.centerx+30, self.player.rect.centery))
+        self.rect = self.image.get_rect(center=(self.player.rect.centerx + 30, self.player.rect.centery))
 
         # location of gun on circle around player
         self.offset_vector = pygame.math.Vector2(30, 0)
         self.offset_vector_copy = self.offset_vector
 
+        # gun rotating variables
         self.flipped = False
         self.angle = 0
         self.recoil = 0
-        self.ammo = 1
 
-    def rotate(self, player_x, player_y, shot, flip):
+        # shooting and reloading variables
+        self.shot = False
+        self.start_time = 0
+        self.current_time = 0
+        self.ammo = 5
+
+    def rotate(self, player_x, player_y, flip):
         # calculating recoil
-        if shot:
+        if self.shot:
             self.recoil = 20
             if flip:
                 self.recoil = -20
@@ -33,10 +39,7 @@ class Gun(pygame.sprite.Sprite):
         mouse_x, mouse_y = pygame.mouse.get_pos()
         rel_x, rel_y = mouse_x - player_x, mouse_y - player_y
         self.angle = (180 / math.pi) * -math.atan2(rel_y, rel_x) + self.recoil
-        if shot == 'no ammo':
-            self.recoil = 20
-            if flip:
-                self.recoil = -20
+
         if self.angle < 0:
             self.angle += 360
 
@@ -47,8 +50,6 @@ class Gun(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=(player_x, player_y))
         # moving gun on circle
         self.rect.center += self.offset_vector
-
-        self.ammo = 1
 
     def flip(self, flip):
         if flip and self.flipped is False:
@@ -71,20 +72,28 @@ class Gun(pygame.sprite.Sprite):
         self.image = pygame.transform.rotate(self.original_image, self.angle)
         self.rect = self.image.get_rect(center=(player_x, player_y))
         self.rect.center += self.offset_vector
-        self.ammo = 0
 
-    def player_look_angle(self):
-        # giving angle and recoil values to player.py for look calculating
-        return self.angle, self.recoil
+    def shooting(self):
 
-    def bullet_data(self):
-        # giving data to bullet.py
-        return self.rect.centerx, self.rect.centery, self.angle, self.offset_vector
+        # waiting time to end recoil ------------------------------------------------------ #
+        self.current_time = pygame.time.get_ticks()
+        if self.current_time - self.start_time > 200 and self.shot != 'no ammo':
+            self.shot = False
 
-    def update(self, player_x, player_y, flip, shot):
-        if shot == 'no ammo':
+        # shooting is unable -------------------------------------------------------------- #
+        if self.ammo == 0 and self.shot != 'no ammo':
+            self.shot = 'no ammo'
+            self.start_time = pygame.time.get_ticks()
+
+        # shooting is available ----------------------------------------------------------- #
+        if self.current_time - self.start_time > 600 and self.shot == 'no ammo':
+            self.shot = False
+            self.ammo = 5
+
+    def update(self, player_x, player_y, flip):
+        self.shooting()
+        if self.shot == 'no ammo':
             self.reload(flip, player_x, player_y)
         else:
-            self.rotate(player_x, player_y, shot, flip)
+            self.rotate(player_x, player_y, flip)
         self.flip(flip)
-

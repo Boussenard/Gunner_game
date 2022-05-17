@@ -44,8 +44,7 @@ class Player(pygame.sprite.Sprite):
             self.direction = self.direction.normalize()
 
         # moving player
-        self.rect.centerx += self.direction.x * self.speed
-        self.rect.centery += self.direction.y * self.speed
+        self.rect.center += self.direction * self.speed
 
     def flip(self):
         # updating cursor cords
@@ -60,15 +59,15 @@ class Player(pygame.sprite.Sprite):
             self.image = pygame.transform.flip(self.image, True, False)
             self.flipped = False
 
-    def look(self, angle, recoil):
+    def look(self, angle):
 
         # looks down
-        if 340 >= angle - recoil >= 200:
+        if 340 >= angle >= 200:
             self.image = pygame.image.load('data/Player_down.png').convert_alpha()
             self.flipped = False
 
         # looks up
-        elif 20 <= angle - recoil <= 160:
+        elif 20 <= angle <= 160:
             self.image = pygame.image.load('data/Player_up.png').convert_alpha()
             self.flipped = False
 
@@ -77,12 +76,8 @@ class Player(pygame.sprite.Sprite):
             self.image = pygame.image.load('data/Player.png').convert_alpha()
             self.flipped = False
 
-    def gun_cords(self):
-        # giving data to gun.py
-        return self.rect.centerx, self.rect.centery, self.flipped
-
-    def update(self, angle, recoil):
+    def update(self, angle):
         self.input()
         self.move()
-        self.look(angle, recoil)
+        self.look(angle)
         self.flip()
