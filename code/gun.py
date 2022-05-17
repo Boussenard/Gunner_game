@@ -20,7 +20,7 @@ class Gun(pygame.sprite.Sprite):
         self.angle = 0
         self.recoil = 0
 
-        # shooting and reloading variables
+        # shooting variables
         self.shot = False
         self.start_time = 0
         self.current_time = 0
@@ -75,17 +75,17 @@ class Gun(pygame.sprite.Sprite):
 
     def shooting(self):
 
-        # waiting time to end recoil ------------------------------------------------------ #
+        # waiting time to end recoil
         self.current_time = pygame.time.get_ticks()
         if self.current_time - self.start_time > 200 and self.shot != 'no ammo':
             self.shot = False
 
-        # shooting is unable -------------------------------------------------------------- #
+        # shooting is unavailable
         if self.ammo == 0 and self.shot != 'no ammo':
             self.shot = 'no ammo'
             self.start_time = pygame.time.get_ticks()
 
-        # shooting is available ----------------------------------------------------------- #
+        # shooting is available
         if self.current_time - self.start_time > 600 and self.shot == 'no ammo':
             self.shot = False
             self.ammo = 5
