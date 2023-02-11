@@ -1,5 +1,6 @@
 # game setup
-WIDTH = 1280
-HEIGHT = 1024
+WIDTH = 900
+HEIGHT = 900
+colour = (50, 50, 35)
 
 FPS = 60

@@ -13,7 +13,7 @@ class Interface:
         self.can = True
 
     def interface_draw(self, screen, ammo):
-        pygame.draw.rect(screen, (25, 25, 25), pygame.Rect(WIDTH - 150, HEIGHT - 170, 100, 70))
+        pygame.draw.rect(screen, (colour[0]-10, colour[1]-10, colour[2]-10), pygame.Rect(WIDTH - 150, HEIGHT - 170, 100, 70))
         screen.blit(self.gun, self.gun_rect)
         pygame.draw.polygon(screen, 'White', [(WIDTH-50, HEIGHT-100), (WIDTH-150, HEIGHT-100), (WIDTH-150, HEIGHT-170), (WIDTH-50, HEIGHT-170)], 3,)
         # number of bullets depends on ammo value

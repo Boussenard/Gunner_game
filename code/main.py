@@ -6,7 +6,6 @@ from gun import Gun
 from cursor import Cursor
 from bullet import Bullet
 from interface import Interface
-from camera import Camera
 
 
 class Game:
@@ -22,7 +21,6 @@ class Game:
         self.gun = Gun()
         self.cursor = Cursor()
         self.interface = Interface()
-        self.camera = Camera()
 
         # game groups
         self.bullet_group = pygame.sprite.Group()
@@ -43,7 +41,7 @@ class Game:
                     # decrementing ammo value
                     self.gun.ammo -= 1
 
-            self.screen.fill((29, 29, 29))
+            self.screen.fill(colour)
 
             # updating objects ---------------------------------------------------------------- #
             self.player.update(self.gun.angle - self.gun.recoil)
@@ -51,16 +49,13 @@ class Game:
             self.gun.update(self.player.rect.centerx, self.player.rect.centery, self.player.flipped)
             self.cursor.update()
             self.interface.update(self.gun.shot)
-            self.camera.update(self.player)
 
             # updating groups ----------------------------------------------------------------- #
             self.bullet_group.update()
 
             # drawing game objects ------------------------------------------------------------ #
-            # self.screen.blit(self.player.image, self.player.rect)
-            self.camera.camera_draw(self.screen, self.player.image, self.player.rect)
-            # self.screen.blit(self.gun.image, self.gun.rect)
-            self.camera.camera_draw(self.screen, self.gun.image, self.gun.rect)
+            self.screen.blit(self.player.image, self.player.rect)
+            self.screen.blit(self.gun.image, self.gun.rect)
             self.screen.blit(self.cursor.image, self.cursor.rect)
             self.bullet_group.draw(self.screen)
             self.interface.interface_draw(self.screen, self.gun.ammo)
@@ -72,3 +67,9 @@ class Game:
 if __name__ == '__main__':
     game = Game()
     game.run()
+
+
+
+
+
+
